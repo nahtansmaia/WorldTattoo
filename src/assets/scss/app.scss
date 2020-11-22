@@ -1,0 +1,54 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300&display=swap');
+@import 'variables'; 
+
+* {
+    font-family: 'Roboto', 'Poppins', sans-serif;
+}
+.v-icon,
+.v-alert,
+.v-form {
+    border-radius: 8px !important;
+    border-color: var(--featured) !important;
+    color: var(--featured) !important;
+    text-decoration: none !important;
+}
+
+.h1 {
+    color: var(--lighter);
+}
+
+.v-btn {
+    border-radius: 8px !important;
+    border-color: var(--featured) !important;
+    color: var(--featured) !important;
+    text-decoration: none !important;
+    &:hover{
+        background-color: var(--featured-dark) !important;
+        color: var(--light) !important;
+        border-color: var(--light) !important;
+    }
+}
+
+.v-btn.btnPrincipal {
+    color: var(--lighter) !important;
+    background-color: var(--featured) !important;
+    margin-left: 5px;
+    border-radius: 8px;
+    &:hover{
+        background-color: transparent !important;
+        color: var(--featured) !important;
+        border-color: var(--featured) !important;
+    }
+}
+.v-btn.btnPrincipalLogin { 
+    color: var(--darker) !important; 
+    background-color: var(--featured) !important;
+    border-radius: 8px !important;
+    &:hover {
+        background-color: transparent !important;
+        color: var(--featured) !important;
+        border-color: var(--featured) !important;
+    }
+
+}

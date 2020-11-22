@@ -6,8 +6,8 @@
 </template>
 
 <script>
-import ToolBarLogin from "@/components/ToolBarLogin"
-import ProfileScreen from "@/components/ProfileScreen";
+import ToolBarLogin from '@/components/ToolBarLogin';
+import ProfileScreen from '@/components/ProfileScreen';
 export default {
   name: "ProfileScreenImp",
   components: {

@@ -65,7 +65,9 @@
         <v-btn
           @click="doCreate()"
           :loading="loading"
-          :disabled="loading"
+          v-bind:disabled="
+            login.email == '' || login.password2 == '' || login.password3 == ''
+          "
           class="btnPrincipalLogin"
           >Sign Up</v-btn
         >
@@ -101,8 +103,8 @@
         <v-btn
           @click="doLogin()"
           :loading="loading"
-          :disabled="loading"
           class="btnPrincipalLogin"
+          v-bind:disabled="login.email == '' || login.password == ''"
           >Sign In</v-btn
         >
       </form>
@@ -133,7 +135,11 @@
           <v-btn @click="showRecoveryPassWordScreenDialog = false">
             Close
           </v-btn>
-          <v-btn class="btnPrincipal" @click="doSendRecoveryPassword()">
+          <v-btn
+            class="btnPrincipal"
+            v-bind:disabled="emailRecovery == ''"
+            @click="doSendRecoveryPassword()"
+          >
             Submit
           </v-btn>
         </v-card>

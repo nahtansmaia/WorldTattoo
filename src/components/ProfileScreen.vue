@@ -14,17 +14,26 @@
             </v-btn>
           </v-card-title>
           <v-card-text>
-            <v-avatar dark v-bind="attrs" v-on="{ ...tooltip, ...menu }">
-              <v-img
-                v-if="profile.avatar"
-                alt="Avatar"
-                :src="profile.avatar"
-                @click="imgAvatar"
-              />
-              <v-btn v-else rounded outlined dense @click="imgAvatar">
-                <v-icon>mdi-camera</v-icon>
-              </v-btn>
-            </v-avatar>
+            <v-badge
+              color="transparent"
+              overlap
+              bottom
+              bordered
+              icon="mdi-camera"
+            >
+              <v-avatar size="70">
+                <v-img
+                  v-if="profile.avatar"
+                  :src="profile.avatar"
+                  @click="imgAvatar"
+                />
+                <v-img
+                  v-else
+                  @click="imgAvatar"
+                  src="https://images.pexels.com/photos/4125504/pexels-photo-4125504.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940"
+                ></v-img>
+              </v-avatar>
+            </v-badge>
             {{ profile.fName + " " + profile.lName }}
           </v-card-text>
         </v-img>
@@ -37,6 +46,7 @@
           label="First Name*"
           required
           :rules="[rules.required]"
+          @input="onChangeName"
         ></v-text-field>
         <v-text-field
           v-model="profile.lName"
@@ -45,6 +55,7 @@
           label="Last Name*"
           required
           :rules="[rules.required]"
+          @input="onChangeName"
         ></v-text-field>
         <v-text-field
           v-model="profile.phone"
@@ -85,9 +96,15 @@
           </v-col>
         </v-row>
       </v-card-text>
-      <v-card-action>
-        <v-btn class="update" outlined @click="updateAccount">Update</v-btn>
-      </v-card-action>
+      <v-card-actions>
+        <v-btn
+          class="update"
+          outlined
+          @click="updateAccount"
+          v-bind:disabled="profile.fName == '' || profile.lName == ''"
+          >Update</v-btn
+        >
+      </v-card-actions>
     </v-card>
   </v-container>
 </template>
@@ -116,10 +133,13 @@ export default {
       this.$router.push({ path: "/Main" });
     },
     imgAvatar() {
-      console.log("Avatar");
+      window.open("file:///C:/");
     },
     updateAccount() {
       console.log("Salvou");
+    },
+    onChangeName() {
+      return (this.profile.tag = "@" + this.profile.fName + this.profile.lName);
     },
   },
 };

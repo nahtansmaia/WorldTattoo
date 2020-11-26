@@ -1,9 +1,9 @@
 <template>
-  <div id="Main"><ToolBarLogin/></div>
+  <div id="Main"><ToolBarLogin /></div>
 </template>
 
 <script>
-import ToolBarLogin from "@/components/ToolBarLogin"
+import ToolBarLogin from "@/components/ToolBarLogin";
 
 export default {
   name: "Main",
@@ -12,8 +12,8 @@ export default {
   },
   data: () => ({}),
   methods: {
-    isAuth() {
-      this.$firebase.auth().onAuthStateChanged(() => {
+    async isAuth() {
+      await this.$firebase.auth().onAuthStateChanged(() => {
         if (!window.uid) {
           /* (window.uid != user.uid) || (window.uid == null) */
           this.$router.push({ name: "Login" });

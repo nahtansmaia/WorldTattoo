@@ -184,6 +184,9 @@ export default {
     },
   },
   methods: {
+    navigation(where) {
+      this.$router.push({ name: where });
+    },
     async doLogin() {
       this.loading = true;
       try {
@@ -191,14 +194,13 @@ export default {
           .auth()
           .signInWithEmailAndPassword(this.login.email, this.login.password);
         window.uid = res.user.uid;
-        this.$router.push({ name: "Main" });
+        this.doCreatedProfile();
       } catch (error) {
         this.SnackText = error.message;
         this.SnackVisible = true;
         this.loading = false;
       }
     },
-
     async doCreate() {
       if (this.login.password2 == this.login.password3) {
         this.loading = true;
@@ -226,7 +228,6 @@ export default {
         return;
       }
     },
-
     async doSendRecoveryPassword() {
       if (!this.emailRecovery == "") {
         await this.$firebase
@@ -241,6 +242,37 @@ export default {
           });
       } else {
         this.showRecoveryPassWordScreenDialog = true;
+      }
+    },
+    async doCreatedProfile() {
+      let firstAcess = null;
+      let dateCreatedAt = new Date(),
+        month = "" + (dateCreatedAt.getMonth() + 1),
+        day = "" + (dateCreatedAt.getDate() + 1),
+        year = dateCreatedAt.getFullYear();
+      const setUser = {
+        email: this.login.email,
+        createdAt: [year, month, day].join("-"),
+      };
+      const ref = this.$firebase.database().ref(window.uid);
+      await ref.once("value").then(function (snapshop) {
+        const key = snapshop.exists();
+        if (key) {
+          firstAcess = true;
+        } else {
+          firstAcess = false;
+        }
+      });
+      if (firstAcess == true) {
+        this.navigation("Main");
+      } else {
+        ref.child("Profile").set(setUser, (err) => {
+          if (err) {
+            console.error;
+          } else {
+            this.navigation("Profile");
+          }
+        });
       }
     },
   },

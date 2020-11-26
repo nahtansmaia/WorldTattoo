@@ -90,10 +90,12 @@ export default {
         this.ShowProfile();
       } else if (method === "ShowMessage") {
         console.log("Message");
+        alert("Em desenvolvimento")
       } else if (method === "Logout") {
         this.Logout();
       } else {
         console.log("About");
+        alert("Em desenvolvimento")
       }
     },
     async Logout() {

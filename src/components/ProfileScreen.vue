@@ -25,11 +25,13 @@
                 <v-img
                   v-if="profile.avatar"
                   :src="profile.avatar"
-                  @click="imgAvatar"
+                  @click="imgAvatar()"
+                  id="avatarLogo1"
                 />
                 <v-img
                   v-else
-                  @click="imgAvatar"
+                  @click="imgAvatar()"
+                  id="avatarLogo"
                   src="https://images.pexels.com/photos/4125504/pexels-photo-4125504.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940"
                 ></v-img>
               </v-avatar>
@@ -133,7 +135,18 @@ export default {
       this.$router.push({ path: "/Main" });
     },
     imgAvatar() {
-      window.open("file:///C:/");
+      var fileSelector = document.createElement("input");
+      fileSelector.type = "file";
+      fileSelector.accept = "image/png, image/jpeg";
+      fileSelector.style.visibility = "hidden";
+      fileSelector.click();
+      fileSelector.addEventListener("change", (event) => {
+        if (event.target.files[0] && event.target.files[0].type.includes('image')) {
+          this.profile.avatar = URL.createObjectURL(event.target.files[0]);
+        } else {
+          alert("Please select a valid image!")
+        }
+      });
     },
     updateAccount() {
       console.log("Salvou");

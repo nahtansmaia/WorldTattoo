@@ -90,11 +90,16 @@
           </v-col>
           <v-col cols="6">
             <v-text-field
+              :class="tagExists ? '' : 'red--text'"
+              :background-color="tagExists ? 'red' : ''"
+              :rules="[rules.required, rules.tag]"
+              :hint="tagExists ? 'Invalid tag!' : 'Valid!'"
               v-model="profile.tag"
               type="text"
               label="Tag*"
               required
-              :rules="[rules.required]"
+              @input="checkTagExist()"
+              append-icon="mdi-map-marker"
             >
             </v-text-field>
           </v-col>
@@ -106,7 +111,9 @@
           outlined
           @click="updateAccount"
           :loading="loading"
-          v-bind:disabled="profile.fName == '' || profile.lName == ''"
+          v-bind:disabled="
+            profile.fName == '' || profile.lName == '' || tagExists
+          "
           >Update</v-btn
         >
       </v-card-actions>
@@ -134,28 +141,33 @@ export default {
       tag: "",
       avatar: "",
       createdAt: "",
+      file: "",
     },
     loading: false,
     SnackVisible: false,
     SnackText: "",
+    tagList: [],
+    tagExists: false,
     rules: {
       required: (value) => !!value || "Required.",
-      min: (v) => v.length >= 8 || "Min 8 characters",
+      min: (value) => value.length >= 8 || "Min 8 characters",
+      tag: (value) => !!value || "Invalid tag!",
     },
   }),
   mounted() {
     this.loadProfile();
   },
   methods: {
+    async updateAvatar() {
+      await this.$firebase
+        .storage()
+        .ref(window.uid)
+        .child("AvatarProfile")
+        .put(this.profile.file);
+    },
     async loadProfile() {
       const ProfileUser = {
-        fName: null,
-        lName: null,
-        email: null,
-        phone: null,
-        birthdate: null,
-        tag: null,
-        createdAt: null,
+        ...this.profile,
       };
       const ref = this.$firebase.database().ref(window.uid + "/Profile");
       await ref.once("value").then(function (snapshop) {
@@ -187,6 +199,19 @@ export default {
       this.profile.tag = ProfileUser.tag;
       this.profile.createdAt = ProfileUser.createdAt;
       this.profile.birthdate = ProfileUser.birthdate;
+      this.profile.uID = window.uid;
+      const snapshot = await this.$firebase
+        .storage()
+        .ref(window.uid)
+        .child("AvatarProfile")
+        .getDownloadURL()
+        .then(function (downloadUrl) {
+          return downloadUrl;
+        })
+        .then((data) => {
+          this.profile.avatar = data;
+          this.profile.file = snapshot;
+        });
     },
     selfClose() {
       this.$router.push({ path: "/Main" });
@@ -203,6 +228,7 @@ export default {
           event.target.files[0].type.includes("image")
         ) {
           this.profile.avatar = URL.createObjectURL(event.target.files[0]);
+          this.profile.file = event.target.files[0];
         } else {
           alert("Please select a valid image!");
         }
@@ -228,6 +254,9 @@ export default {
         createdAt: this.profile.createdAt,
       };
       const ref = this.$firebase.database().ref(window.uid);
+      if (this.profile.tag.slice(0, 1) !== "@") {
+        this.profile.tag = "@" + this.profile.tag;
+      }
       await ref.child("Profile").set(ProfileUser, (err) => {
         if (err) {
           console.error;
@@ -235,12 +264,58 @@ export default {
           this.SnackText = "profile saved successfully!";
           this.SnackVisible = true;
           this.loading = false;
-          //this.$router.push({ name: "Main" });
+          this.insertTag();
+          if (this.profile.file) {
+            this.updateAvatar();
+          }
         }
       });
     },
-    onChangeName() {
+    async onChangeName() {
+      await this.checkTagExist();
       return (this.profile.tag = "@" + this.profile.fName + this.profile.lName);
+    },
+    async insertTag() {
+      const tagInsert = {
+        tagName: this.profile.tag,
+        tagIdUser: this.profile.uID,
+      };
+      const ref = await this.$firebase
+        .database()
+        .ref("tag/" + tagInsert.tagName);
+      ref.set(tagInsert.tagIdUser, (err) => {
+        if (err) {
+          console.error;
+        }
+      });
+    },
+    async checkTagExist() {
+      let tagExist = {
+        key: null,
+        tag: tagExist,
+        tagList: this.tagList,
+        exist: this.tagExists,
+        ...this.profile,
+      };
+      const ref = this.$firebase.database().ref("tag");
+      await ref.once("value", function (snapshot) {
+        snapshot.forEach(function (childSnapshot) {
+          tagExist.Key = childSnapshot.key;
+          tagExist.tagList.push(childSnapshot);
+          tagExist.tag = childSnapshot.val();
+        });
+      });
+      for (var i = 0; this.tagList[i]; i++) {
+        if (
+          this.profile.tag == this.tagList[i].key &&
+          this.tagList[i].node_.value_ !== window.uid
+        ) {
+          this.tagList = [];
+          this.tagExists = true;
+          break;
+        }
+        this.tagExists = false;
+      }
     },
   },
 };

@@ -45,15 +45,25 @@
 </template>
 
 <script>
-
 export default {
   name: "ToolBarPrincipal",
-  components: {
-  },
+  components: {},
   data: () => ({
     offsetMenuY: true,
     darkTheme: false,
     iconTheme: "mdi-weather-sunny",
+    profile: {
+      uID: "",
+      fName: "",
+      lName: "",
+      email: "",
+      phone: "",
+      birthdate: "",
+      tag: "",
+      avatar: "",
+      createdAt: "",
+      file: "",
+    },
     items: [
       { title: "Profile", icon: "mdi-account", action: "ShowProfile" },
       {
@@ -64,14 +74,10 @@ export default {
       { title: "Logout", icon: "mdi-logout", action: "Logout" },
       { title: "About", icon: "mdi-information-outline", action: "ShowAbout" },
     ],
-    profile: {
-      uID: "",
-      fName: "",
-      lName: "",
-      email: "",
-      avatar: "",
-    },
   }),
+  mounted() {
+    this.loadProfile();
+  },
   methods: {
     navigation(where) {
       this.$router.push({ name: where });
@@ -90,12 +96,11 @@ export default {
         this.ShowProfile();
       } else if (method === "ShowMessage") {
         console.log("Message");
-        alert("Em desenvolvimento")
+        alert("Em desenvolvimento");
       } else if (method === "Logout") {
         this.Logout();
       } else {
-        console.log("About");
-        alert("Em desenvolvimento")
+        this.ShowAbout();
       }
     },
     async Logout() {
@@ -105,8 +110,60 @@ export default {
       this.navigation("Login");
     },
     ShowProfile() {
-      this.navigation("Profile")
+      this.navigation("Profile");
     },
+
+    async loadProfile() {
+      const ProfileUser = {
+        ...this.profile,
+      };
+      const ref = this.$firebase.database().ref(window.uid + "/Profile");
+      await ref.once("value").then(function (snapshop) {
+        ProfileUser.fName = snapshop.child("fName").val();
+        ProfileUser.lName = snapshop.child("lName").val();
+        ProfileUser.email = snapshop.child("email").val();
+        ProfileUser.phone = snapshop.child("phone").val();
+        var dateBirth = new Date(snapshop.child("birthdate").val()),
+          month = new Intl.DateTimeFormat("pt", { month: "2-digit" }).format(
+            dateBirth
+          ),
+          day = "" + (dateBirth.getDate() + 1),
+          year = dateBirth.getFullYear();
+
+        ProfileUser.birthdate = [year, month, day].join("-");
+        var dateCreateAt = new Date(snapshop.child("createdAt").val()),
+          monthCreateAt = "" + (dateCreateAt.getMonth() + 1),
+          dayCreateAt = "" + dateCreateAt.getDate(),
+          yearCreateAt = dateCreateAt.getFullYear();
+        ProfileUser.createdAt = [yearCreateAt, monthCreateAt, dayCreateAt].join(
+          "-"
+        );
+        ProfileUser.tag = snapshop.child("tag").val();
+      });
+      this.profile.fName = ProfileUser.fName;
+      this.profile.lName = ProfileUser.lName;
+      this.profile.email = ProfileUser.email;
+      this.profile.phone = ProfileUser.phone;
+      this.profile.tag = ProfileUser.tag;
+      this.profile.createdAt = ProfileUser.createdAt;
+      this.profile.birthdate = ProfileUser.birthdate;
+      this.profile.uID = window.uid;
+      const snapshot = await this.$firebase
+        .storage()
+        .ref(window.uid)
+        .child("AvatarProfile")
+        .getDownloadURL()
+        .then(function (downloadUrl) {
+          return downloadUrl;
+        })
+        .then((data) => {
+          this.profile.avatar = data;
+          this.profile.file = snapshot;
+        });
+    },
+    ShowAbout(){
+      this.navigation("About")
+    }
   },
 };
 </script>

@@ -99,7 +99,7 @@
               label="Tag*"
               required
               @input="checkTagExist()"
-              append-icon="mdi-map-marker"
+              prepend-icon="mdi-tag"
             >
             </v-text-field>
           </v-col>

@@ -14,6 +14,7 @@
     "firebase": "^8.0.0",
     "vee-validate": "^3.4.5",
     "vue": "^2.6.11",
+    "vue-canvasvideo": "^1.0.0",
     "vue-router": "^3.2.0",
     "vuetify": "^2.2.11"
   },

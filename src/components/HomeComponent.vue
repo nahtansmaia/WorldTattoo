@@ -1,6 +1,5 @@
 <template>
   <div class="page">
-    <title>Vuetify Parallax Starter</title>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <section id="hero">
@@ -10,7 +9,7 @@
           max-height="80px"
           src="https://images.pexels.com/photos/4123707/pexels-photo-4123707.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940"
         >
-          <v-card class="Cardbanner" outlined>
+          <v-card class="Cardbanner float-right" outlined>
             <v-card-title primary-title>
               <h1 class="headertekst">World Tattoo</h1>
               <h4 class="headertekst" v-text="DescriptionSite"></h4>
@@ -18,7 +17,7 @@
             <v-card-text>
               <h5 class="headertekst" v-text="DescriptionRegister"></h5>
               <v-btn
-                class="align-center"
+                class="align-center registerNow"
                 outlined
                 dark
                 @click="$vuetify.goTo('#features')"
@@ -41,43 +40,39 @@
       </v-row>
     </section>
     <section>
-      <v-row
-        class="CardRow"
-        id="features"
-        :min-height="'calc(100vh - ' + $vuetify.application.top + 'px)'"
-      >
-        <v-card class="CardCol" flat>
+      <v-row align="center" class="CardRow" id="features">
+        <v-col cols="4" class="CardCol" flat align-self="center">
           <!-- card Global -->
           <v-icon>mdi-earth</v-icon>
           <v-card-title>
             <h4 class="headertekst">Global</h4>
           </v-card-title>
           <v-card-text v-text="DescriptionGlobal"></v-card-text>
-        </v-card>
+        </v-col>
         <!-- card Faster -->
-        <v-card class="CardCol" flat>
+        <v-col cols="4" class="CardCol" flat>
           <v-icon>mdi-clock-fast</v-icon>
           <v-card-title>
             <h4 class="headertekst">Faster</h4>
           </v-card-title>
           <v-card-text v-text="DescriptionFaster"></v-card-text>
-        </v-card>
+        </v-col>
         <!-- card Money -->
-        <v-card class="CardCol" flat>
+        <v-col cols="4" class="CardCol" flat>
           <v-icon>mdi-currency-usd</v-icon>
           <v-card-title>
             <h4 class="headertekst">All prices</h4>
           </v-card-title>
           <v-card-text v-text="DescriptionMoney"></v-card-text>
-        </v-card>
+        </v-col>
         <!-- card Jobs -->
-        <v-card class="CardCol" flat>
+        <v-col cols="4" class="CardCol" flat>
           <v-icon>mdi-briefcase-variant</v-icon>
           <v-card-title>
             <h4 class="headertekst">Jobs</h4>
           </v-card-title>
           <v-card-text v-text="DescriptionJobs"></v-card-text>
-        </v-card>
+        </v-col>
       </v-row>
       <v-row>
         <v-card-title
@@ -144,7 +139,7 @@ export default {
   methods: {
     navigation(where) {
       this.$router.push({ name: where });
-    },/*
+    } /*
     beforeRouteEnter(to, from, next) {
       next((vm) => {
         if (window.uid) {
@@ -153,7 +148,7 @@ export default {
           next();
         }
       });
-    },*/
+    },*/,
   },
 };
 </script>
@@ -179,24 +174,35 @@ h5.headertekst {
 .CardRow {
   align-items: center;
   justify-content: center;
+  text-align: center;
+  width: 100vw;
 }
 
 .CardCol {
+  display: inline-block;
+  vertical-align: middle;
+  float: none;
   margin-top: 2%;
-  width: 20%;
-  height: 200px;
   text-align: center;
   justify-content: center;
+  min-width: 20vw;
 }
 
-.Cardbanner {
+.v-card.Cardbanner {
   padding-top: 5%;
   text-align: center;
-  width: 40%;
-  margin-left: 59%;
+  min-width: 40%;
+  min-height: 35vh;
+  padding-left: 2%;
   margin-top: 10%;
-  min-height: 300px;
   border-color: var(--featured-dark);
   background-color: transparent;
+  .v-btn {
+    width: 11vw;
+    min-width: 35%;
+  }
+  .v-btn.registerNow {
+    margin-right: 15%;
+  }
 }
 </style>

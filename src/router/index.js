@@ -41,7 +41,7 @@ const routes = [
     name:'About',
     meta:{icon: 'About', title: 'About'},
     component: () => import(/* webpackChunkName: "About" */ '../views/About.vue')
-  }
+  },
 ]
 /*
 router.beforeEach((to, from, next) => {

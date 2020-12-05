@@ -113,15 +113,14 @@
 
       <v-dialog
         class="v-diaLog"
-        max-width="40%"
+        width="580"
+        alig
         v-model="showRecoveryPassWordScreenDialog"
       >
         <v-card class="RecoveryPassWord" outlined>
-          <v-card-title>
-            <h1>Forget your password?</h1>
-          </v-card-title>
+            <h1 class="text-center">Forget your password?</h1>
           <v-card-text>
-            <h2>Please enter your email to recover password</h2>
+            <h2 class="text-center">Please enter your email to recover password</h2>
             <v-text-field
               v-model="emailRecovery"
               type="email"
@@ -296,9 +295,11 @@ article {
 .RecoveryPassWord {
   border-color: var(--featured);
   padding: 5px;
+  min-width: 40vw;
   h1 {
     color: var(--featured-dark);
     font-size: 100%;
+    text-align: center;
   }
   h2 {
     color: var(--ligther);
@@ -312,7 +313,7 @@ article {
 }
 .container {
   position: relative;
-  width: 60vw;
+  min-width: 60vw;
   height: 70vh;
   border-radius: 8px;
   overflow: hidden;

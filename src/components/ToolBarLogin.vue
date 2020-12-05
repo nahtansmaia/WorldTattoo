@@ -2,7 +2,7 @@
   <div class="home">
     <!-- navbar top -->
     <v-app-bar app clipped-left>
-      <v-toolbar-title> World Tattoo </v-toolbar-title>
+      <v-toolbar-title> World Tattoo</v-toolbar-title>
       <v-spacer />
       <v-btn
         class="btnThemeSwitch"
@@ -41,14 +41,19 @@
         </v-list>
       </v-menu>
     </v-app-bar>
+    <MessengerScreen :dialog="dialogMessenger" />
   </div>
 </template>
 
 <script>
+import MessengerScreen from "@/components/MessengerScreen";
 export default {
   name: "ToolBarPrincipal",
-  components: {},
+  components: {
+    MessengerScreen,
+  },
   data: () => ({
+    dialogMessenger: false,
     offsetMenuY: true,
     darkTheme: false,
     iconTheme: "mdi-weather-sunny",
@@ -95,8 +100,7 @@ export default {
       if (method === "ShowProfile") {
         this.ShowProfile();
       } else if (method === "ShowMessage") {
-        console.log("Message");
-        alert("Em desenvolvimento");
+        this.dialogMessenger = true;
       } else if (method === "Logout") {
         this.Logout();
       } else {
@@ -161,9 +165,9 @@ export default {
           this.profile.file = snapshot;
         });
     },
-    ShowAbout(){
-      this.navigation("About")
-    }
+    ShowAbout() {
+      this.navigation("About");
+    },
   },
 };
 </script>
